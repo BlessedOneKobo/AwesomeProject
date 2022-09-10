@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TextInput, View } from "react-native";
+import { Text, TextInput, Pressable } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
 
 interface Props {
@@ -39,16 +39,17 @@ export default function TodoListInput({
           marginBottom: 4,
         }}
       />
-      <View
+      <Pressable
         style={{
           marginBottom: 16,
           flex: 1,
           flexDirection: "row",
           alignItems: "center",
-        }}>
+        }}
+        onPress={() => markAll(!allMarked)}>
         <CheckBox value={allMarked} onValueChange={markAll} disabled={!hasItems} />
         <Text>Mark all as completed</Text>
-      </View>
+      </Pressable>
     </>
   );
 }
