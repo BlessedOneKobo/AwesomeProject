@@ -1,8 +1,8 @@
 import React from "react";
-import Hello from "./components/Hello";
+import TodoApp from "./components/TodoApp";
 
-const App = () => {
-  return <Hello name="Jane" />;
-};
+function App() {
+  return <TodoApp />;
+}
 
 export default App;
