@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { ScrollView, TextInput } from "react-native";
 import TodoListStatusBar from "../components/TodoListStatusBar";
 import TodoList from "../components/TodoList";
@@ -10,47 +10,37 @@ export interface TodoItem {
   completed: boolean;
 }
 
-export interface TodoCount {
-  completed: number;
-  incomplete: number;
-}
-
 export default function TodoApp() {
+  const [todoList, setTodoList] = useState<Array<TodoItem>>([]);
+  const completedTodoList = useMemo(
+    () => todoList.filter((item) => item.completed),
+    [todoList],
+  );
+  const numberOfUncompletedItems = useMemo(
+    () => todoList.length - completedTodoList.length,
+    [completedTodoList],
+  );
+
   const textInput = useRef<TextInput>(null);
   const [inputText, setInputText] = useState("");
-  const [todoList, setTodoList] = useState<Array<TodoItem>>([]);
   const [allMarked, setAllMarked] = useState(false);
-  const [count, setCount] = useState({ completed: 0, incomplete: 0 });
 
   useEffect(() => {
     textInput.current?.focus();
   }, []);
 
-  useEffect(() => {
-    const completedTodoList = todoList.filter((item) => item.completed);
-
-    setCount({
-      completed: completedTodoList.length,
-      incomplete: todoList.length - completedTodoList.length,
-    });
-  }, [todoList]);
-
-  useEffect(() => {
-    if (todoList.length && count.completed === todoList.length) {
-      setAllMarked(true);
-    } else {
-      setAllMarked(false);
-    }
-  }, [count]);
-
-  const removeTodoItem = (idx: number) => {
-    setTodoList(todoList.slice(0, idx).concat(todoList.slice(idx + 1)));
+  const removeTodoItem = (selectedIndex: number) => {
+    setTodoList(
+      todoList.slice(0, selectedIndex).concat(todoList.slice(selectedIndex + 1)),
+    );
   };
 
-  const toggleTodoItemCompleted = (idx: number) => {
-    const list = [...todoList];
-    list[idx].completed = !list[idx].completed;
+  const toggleTodoItemCompleted = (selectedIndex: number) => {
+    const list = todoList.map((item, index) =>
+      index === selectedIndex ? { ...item, completed: !item.completed } : item,
+    );
     setTodoList(list);
+    setAllMarked(list.every((item) => item.completed));
   };
 
   const handleEndEditing = () => {
@@ -64,8 +54,10 @@ export default function TodoApp() {
   };
 
   const markAll = (newValue: boolean) => {
-    setAllMarked(newValue);
-    setTodoList(todoList.map((item) => ({ ...item, completed: newValue })));
+    if (Boolean(todoList.length)) {
+      setAllMarked(newValue);
+      setTodoList(todoList.map((item) => ({ ...item, completed: newValue })));
+    }
   };
 
   const removeCompletedTodoItems = () => {
@@ -95,7 +87,8 @@ export default function TodoApp() {
 
       {Boolean(todoList.length) && (
         <TodoListStatusBar
-          count={count}
+          numberOfCompletedItems={completedTodoList.length}
+          numberOfUncompletedItems={numberOfUncompletedItems}
           removeCompletedTodoItems={removeCompletedTodoItems}
         />
       )}

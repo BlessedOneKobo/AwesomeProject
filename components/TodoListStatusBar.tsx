@@ -2,10 +2,12 @@ import React from "react";
 import { Button, Text, View } from "react-native";
 
 function StatusBar({
-  count,
+  numberOfCompletedItems,
+  numberOfUncompletedItems,
   removeCompletedTodoItems,
 }: {
-  count: { completed: number; incomplete: number };
+  numberOfCompletedItems: number;
+  numberOfUncompletedItems: number;
   removeCompletedTodoItems: () => void;
 }) {
   return (
@@ -17,14 +19,14 @@ function StatusBar({
           alignItems: "center",
         }}>
         <Text style={{ fontWeight: "bold", fontSize: 16, marginRight: 4 }}>
-          {count.incomplete}
+          {numberOfUncompletedItems}
         </Text>
-        <Text>item{count.incomplete > 1 ? "s" : ""} left</Text>
+        <Text>item{numberOfUncompletedItems > 1 ? "s" : ""} left</Text>
       </View>
-      {Boolean(count.completed) && (
+      {Boolean(numberOfCompletedItems) && (
         <Button
-          title={`Clear ${count.completed} completed item${
-            count.completed > 1 ? "s" : ""
+          title={`Clear ${numberOfCompletedItems} completed item${
+            numberOfCompletedItems > 1 ? "s" : ""
           }`}
           color="#0b7a23"
           onPress={removeCompletedTodoItems}
