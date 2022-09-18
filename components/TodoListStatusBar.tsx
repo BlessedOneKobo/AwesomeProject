@@ -21,12 +21,12 @@ function StatusBar({
         <Text style={{ fontWeight: "bold", fontSize: 16, marginRight: 4 }}>
           {numberOfUncompletedItems}
         </Text>
-        <Text>item{numberOfUncompletedItems > 1 ? "s" : ""} left</Text>
+        <Text>item{numberOfUncompletedItems !== 1 ? "s" : ""} left</Text>
       </View>
       {Boolean(numberOfCompletedItems) && (
         <Button
           title={`Clear ${numberOfCompletedItems} completed item${
-            numberOfCompletedItems > 1 ? "s" : ""
+            numberOfCompletedItems !== 1 ? "s" : ""
           }`}
           color="#0b7a23"
           onPress={removeCompletedTodoItems}

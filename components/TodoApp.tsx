@@ -29,25 +29,32 @@ export default function TodoApp() {
     textInput.current?.focus();
   }, []);
 
+  const updateListAndMasterCheckbox = (list: TodoItem[]) => {
+    setTodoList(list);
+    setAllMarked(list.every((item) => item.completed));
+  };
+
   const removeTodoItem = (selectedIndex: number) => {
-    setTodoList(
+    updateListAndMasterCheckbox(
       todoList.slice(0, selectedIndex).concat(todoList.slice(selectedIndex + 1)),
     );
   };
 
   const toggleTodoItemCompleted = (selectedIndex: number) => {
-    const list = todoList.map((item, index) =>
-      index === selectedIndex ? { ...item, completed: !item.completed } : item,
+    updateListAndMasterCheckbox(
+      todoList.map((item, index) =>
+        index === selectedIndex ? { ...item, completed: !item.completed } : item,
+      ),
     );
-    setTodoList(list);
-    setAllMarked(list.every((item) => item.completed));
   };
 
   const handleEndEditing = () => {
     const trimmedInputText = inputText.trim();
 
     if (trimmedInputText) {
-      setTodoList([...todoList, { text: trimmedInputText, completed: false }]);
+      updateListAndMasterCheckbox(
+        todoList.concat({ text: trimmedInputText, completed: false }),
+      );
       setInputText("");
       textInput.current?.focus();
     }
