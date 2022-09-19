@@ -16,10 +16,6 @@ export default function TodoApp() {
     () => todoList.filter((item) => item.completed),
     [todoList],
   );
-  const numberOfUncompletedItems = useMemo(
-    () => todoList.length - completedTodoList.length,
-    [completedTodoList],
-  );
 
   const textInput = useRef<TextInput>(null);
   const [inputText, setInputText] = useState("");
@@ -31,7 +27,7 @@ export default function TodoApp() {
 
   const updateListAndMasterCheckbox = (list: TodoItem[]) => {
     setTodoList(list);
-    setAllMarked(list.every((item) => item.completed));
+    setAllMarked(Boolean(list.length) && list.every((item) => item.completed));
   };
 
   const removeTodoItem = (selectedIndex: number) => {
@@ -94,8 +90,8 @@ export default function TodoApp() {
 
       {Boolean(todoList.length) && (
         <TodoListStatusBar
+          totalNumberOfItems={todoList.length}
           numberOfCompletedItems={completedTodoList.length}
-          numberOfUncompletedItems={numberOfUncompletedItems}
           removeCompletedTodoItems={removeCompletedTodoItems}
         />
       )}

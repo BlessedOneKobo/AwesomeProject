@@ -2,14 +2,16 @@ import React from "react";
 import { Button, Text, View } from "react-native";
 
 function StatusBar({
+  totalNumberOfItems,
   numberOfCompletedItems,
-  numberOfUncompletedItems,
   removeCompletedTodoItems,
 }: {
+  totalNumberOfItems: number;
   numberOfCompletedItems: number;
-  numberOfUncompletedItems: number;
   removeCompletedTodoItems: () => void;
 }) {
+  const numberOfUncompletedItems = totalNumberOfItems - numberOfCompletedItems;
+
   return (
     <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
       <View
