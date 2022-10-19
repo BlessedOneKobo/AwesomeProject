@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ScrollView, TextInput } from "react-native";
+import { ScrollView, TextInput, ToastAndroid } from "react-native";
 import TodoListStatusBar from "../components/TodoListStatusBar";
 import TodoList from "../components/TodoList";
 import TodoListHeading from "../components/TodoListHeading";
@@ -8,6 +8,21 @@ import TodoListInput from "../components/TodoListInput";
 export interface TodoItem {
   text: string;
   completed: boolean;
+}
+
+function showToast({ visible, message }: { visible: boolean; message: string }) {
+  if (visible) {
+    ToastAndroid.showWithGravityAndOffset(
+      message,
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50,
+    );
+    return null;
+  }
+
+  return null;
 }
 
 export default function TodoApp() {
@@ -25,6 +40,10 @@ export default function TodoApp() {
   const updateListAndMasterCheckbox = (list: TodoItem[]) => {
     setTodoList(list);
     setAllMarked(!!list.length && list.every((item) => item.completed));
+
+    if (!list.length) {
+      showToast({ visible: true, message: "List is empty" });
+    }
   };
 
   const removeTodoItem = (selectedIndex: number) => {
@@ -61,8 +80,7 @@ export default function TodoApp() {
   };
 
   const removeCompletedTodoItems = () => {
-    setTodoList(todoList.filter((item) => !item.completed));
-    setAllMarked(false);
+    updateListAndMasterCheckbox(todoList.filter((item) => !item.completed));
   };
 
   return (
