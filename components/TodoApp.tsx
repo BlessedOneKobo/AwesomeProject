@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ScrollView, TextInput } from "react-native";
 import TodoListStatusBar from "../components/TodoListStatusBar";
 import TodoList from "../components/TodoList";
@@ -12,10 +12,7 @@ export interface TodoItem {
 
 export default function TodoApp() {
   const [todoList, setTodoList] = useState<Array<TodoItem>>([]);
-  const completedTodoList = useMemo(
-    () => todoList.filter((item) => item.completed),
-    [todoList],
-  );
+  const completedTodoList = todoList.filter((item) => item.completed);
 
   const textInput = useRef<TextInput>(null);
   const [inputText, setInputText] = useState("");
@@ -27,7 +24,7 @@ export default function TodoApp() {
 
   const updateListAndMasterCheckbox = (list: TodoItem[]) => {
     setTodoList(list);
-    setAllMarked(Boolean(list.length) && list.every((item) => item.completed));
+    setAllMarked(!!list.length && list.every((item) => item.completed));
   };
 
   const removeTodoItem = (selectedIndex: number) => {
@@ -57,7 +54,7 @@ export default function TodoApp() {
   };
 
   const markAll = (newValue: boolean) => {
-    if (Boolean(todoList.length)) {
+    if (todoList.length) {
       setAllMarked(newValue);
       setTodoList(todoList.map((item) => ({ ...item, completed: newValue })));
     }
@@ -79,7 +76,7 @@ export default function TodoApp() {
         handleEndEditing={handleEndEditing}
         allMarked={allMarked}
         markAll={markAll}
-        hasItems={Boolean(todoList.length)}
+        hasItems={!!todoList.length}
       />
 
       <TodoList
@@ -88,7 +85,7 @@ export default function TodoApp() {
         toggleTodoItemCompleted={toggleTodoItemCompleted}
       />
 
-      {Boolean(todoList.length) && (
+      {!!todoList.length && (
         <TodoListStatusBar
           totalNumberOfItems={todoList.length}
           numberOfCompletedItems={completedTodoList.length}

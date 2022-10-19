@@ -25,7 +25,7 @@ function StatusBar({
         </Text>
         <Text>item{numberOfUncompletedItems !== 1 ? "s" : ""} left</Text>
       </View>
-      {Boolean(numberOfCompletedItems) && (
+      {!!numberOfCompletedItems && (
         <Button
           title={`Clear ${numberOfCompletedItems} completed item${
             numberOfCompletedItems !== 1 ? "s" : ""
